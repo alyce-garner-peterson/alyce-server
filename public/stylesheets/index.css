@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+.loader {
+    background-image: url(../images/loader.svg);
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.loader>* {
+    visibility: hidden;
+}
+
+.fullscreen{
+    min-height: 100vh;
+}
+
+.storyfont{
+    font-family: 'Special Elite', cursive !important;
+}
