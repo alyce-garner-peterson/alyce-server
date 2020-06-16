@@ -7,11 +7,15 @@ server {
                 proxy_pass https://alyce-garner-peterson.github.io;
         }
 
-	location /implementation {
+		location /demo {
+                proxy_pass http://localhost:3000;
+        }
+		
+		location /implementation {
                 proxy_pass http://localhost:3000;
         }
 
-	location /socket.io {
+		location /socket.io {
                 proxy_http_version 1.1;
                 proxy_set_header Upgrade $http_upgrade;
                 proxy_set_header Connection "upgrade";
