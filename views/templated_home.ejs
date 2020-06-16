@@ -368,7 +368,7 @@
                 ")\">Rewrite <i class='material-icons right'>edit</i></button>";*/
               script_content = script_content + "&emsp;<a style=\"border-radius: 50%; color: white;\" class='btn btn-danger btn-sm editbuttonclass' onclick='open_rewrite_plot_dashboard("+i+")'><i class=\"material-icons\">edit</i></a></div>&nbsp;<br/>";
             } else if (option == 3) {
-              script_content = script_content + "<br/><audio style=\"height: 15px;\" src='/audio/" + audio_file_names[i] +
+              script_content = script_content + "<br/><audio style=\"height: 15px;\" src='audio/" + audio_file_names[i] +
                 "' controls></audio></div>&nbsp;<br/>";
             }
             else{
@@ -379,7 +379,7 @@
               script_content = script_content + "<br/>";
             script_content = script_content + "<span class='storyfont' style=\"color: green;\">" + story_list[i][0].trim() + ".</span>";
             if (option == 3) {
-              script_content = script_content + " <audio style=\"height: 15px;\" src='/audio/" + audio_file_names[i] +
+              script_content = script_content + " <audio style=\"height: 15px;\" src='audio/" + audio_file_names[i] +
                 "' controls></audio> ";
             }
           } else if (story_list[i][1] == "DIALOGUE") {
@@ -387,7 +387,7 @@
               script_content = script_content + "<br/>&nbsp;";
             script_content = script_content + "<br/><div class='text-center'><b><span class='storyfont'>" + story_list[i][4].trim().toUpperCase() + "</span></b></div><div class='text-center'><div style='display: inline-block; width: 20vw;'><i class='storyfont'>" + story_list[i][5].trim() + "</i></div></div>";
             if (option == 3) {
-              script_content = script_content + "<div class='text-center'><audio style=\"height: 15px;\" src='/audio/" + audio_file_names[i] +
+              script_content = script_content + "<div class='text-center'><audio style=\"height: 15px;\" src='audio/" + audio_file_names[i] +
                 "' controls></audio></div>";
             }
             script_content = script_content + "<br/>";
