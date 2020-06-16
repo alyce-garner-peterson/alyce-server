@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link rel="icon" type="image/x-icon" href="assets/img/fountain-pen.svg">
 
   <title>Alyce : An A.I fine tuned screenplay writer</title>
   <meta content="" name="descriptison">
@@ -208,7 +209,7 @@
             <ul>
               <li><i class="bx bx-chevron-right"></i> <a href="http://alyce.southeastasia.cloudapp.azure.com" target="_blank">Home</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="https://github.com/alyce-garner-peterson"
-                target="_blank">Github</a></li>
+                target="_blank">Source Code</a></li>
             </ul>
           </div>
           <div class="col-lg-7 col-md-6 footer-links">
@@ -295,8 +296,8 @@
 
     function add_control_buttons_to_plot_rewrite_dashboard(plot_no) {
       rewrite_element_0.innerHTML = story_list[plot_no][0] +
-        "<br/>&nbsp;<br/><button class=\"btn btn-primary\" onclick=\"rewrite_plot(" + plot_no +
-        ")\">Write New Plot&nbsp;&nbsp;<i class=\"ri-add-line\"></i></button>&emsp;<button class=\"btn btn-primary\" onclick=\"close_rewrite_plot_dashboard()\">Done&nbsp;&nbsp;<i class=\"ri-check-fill\"></i></button>"
+        "<br/>&nbsp;<br/><button id='rewrite_button' class=\"btn btn-primary\" onclick=\"rewrite_plot(" + plot_no +
+        ")\">Write New Plot&nbsp;&nbsp;<i class=\"ri-add-line\"></i></button>&emsp;<button class=\"btn btn-primary\" id='close_rewrite_button' onclick=\"close_rewrite_plot_dashboard()\">Done&nbsp;&nbsp;<i class=\"ri-check-fill\"></i></button>"
     }
 
     function add_radio_buttons_to_plot_rewrite_dashboard(plot_no){
@@ -324,6 +325,10 @@
         [plot_no, story_list[plot_no][2]]
       ];
       rewrite_element_1.innerHTML = "";
+      document.getElementById('rewrite_button').disabled = true;
+      document.getElementById('close_rewrite_button').disabled = true;
+      $("#rewrite_section").addClass('loader');
+      $("#rewrite_section").get(0).scrollIntoView({behavior: "smooth"});
       call_phase_2_step_2();
     }
 
@@ -411,8 +416,7 @@
         let input_data = input_story.value;
         if (input_data != "") {
           story = input_data;
-          document.getElementById('input_section').style.display = "none";
-          $("#rewrite_section").get(0).scrollIntoView({behavior: "smooth"});
+          submit_button.disabled = true;
           call_phase_1_step_1();
         } else {
           window.alert("No Input Data!...");
@@ -421,10 +425,12 @@
 
       // Code to fetch a sample story on Clicking Fetch Button
       $("#fetch_input_story").click(function () {
+        document.getElementById("fetch_input_story").disabled = true;
         $.ajax({
           url: "story/story01.txt",
           success: function (result) {
             $("#input_story").html(result);
+            document.getElementById("fetch_input_story").disabled = false;
           }
         });
       });
@@ -443,9 +449,9 @@
         socket.emit("client-ready", "");
 
         call_phase_1_step_1 = function () {
-          timeline_label[0].classList.remove("--is-pending");
-          timeline_label[0].classList.add("--is-inprogress");
-          timeline_label[0]._tippy.setContent("In Progress");
+          //timeline_label[0].classList.remove("--is-pending");
+          //timeline_label[0].classList.add("--is-inprogress");
+          //timeline_label[0]._tippy.setContent("In Progress");
           socket.emit("client-to-server", {
             "phase": 1,
             "procedureNo": 0,
@@ -471,6 +477,7 @@
 
         call_phase_3_step_1 = function () {
           timeline_content[3].innerHTML = "";
+          document.getElementById('generate_audio_button').disabled = true;
           socket.emit("client-to-server", {
             "phase": 3,
             "procedureNo": 0,
@@ -499,18 +506,23 @@
         if (data.phase == 1 && data.status == "STARTED") {
           current_phase = 1;
           current_data_server = 1;
-          timeline_label[0].classList.remove("--is-inprogress");
+          timeline_label[0].classList.remove("--is-pending");
           timeline_label[0].classList.add("--is-completed");
+          timeline_content[0].parentElement.classList.add("completed-content");
           timeline_label[1].classList.remove("--is-pending");
           timeline_label[1].classList.add("--is-inprogress");
           timeline_label[0]._tippy.setContent("Completed");
           timeline_label[1]._tippy.setContent("In Progress");
           logger_element.innerHTML = logger_element.innerHTML + "<br/><b>Phase 1 Started</b>";
           timeline_content[0].innerHTML = "Input Received at Server";
+          timeline_content[1].innerHTML = "<div class='text-center'><img src='images/loader2.svg' height='40px'></div>";
+          document.getElementById('input_section').style.display = "none";
+          $("#rewrite_section").get(0).scrollIntoView({behavior: "smooth"});
         } else if (data.phase == 1 && data.status == "COMPLETED") {
           current_data_server = 0;
           timeline_label[1].classList.remove("--is-inprogress");
           timeline_label[1].classList.add("--is-completed");
+          timeline_content[1].parentElement.classList.add("completed-content");
           timeline_label[1]._tippy.setContent("Completed");
           story_list = data.output;
           logger_element.innerHTML = logger_element.innerHTML + "<br/><b>Phase 1 Completed</b><br/>" + JSON
@@ -524,6 +536,7 @@
           timeline_label[2].classList.remove("--is-pending");
           timeline_label[2].classList.add("--is-inprogress");
           timeline_label[2]._tippy.setContent("In Progress");
+          timeline_content[2].innerHTML = "<div class='text-center'><img src='images/loader2.svg' height='40px'></div>";
           logger_element.innerHTML = logger_element.innerHTML + "<br/><b>Phase 2.1 Started</b>";
         } else if (data.phase == 2 && data.procedureNo == 0 && data.status == "COMPLETED") {
           current_data_server = 0;
@@ -549,7 +562,7 @@
             //rewrite_progress.innerHTML = "Started Creating New Plot Please Wait !.....";
             //document.getElementsByTagName("body")[0].classList.add("loader");
             $("#rewrite_section").addClass('loader');
-            $("#rewrite_section").get(0).scrollIntoView({behavior: "smooth"});
+            //$("#rewrite_section").get(0).scrollIntoView({behavior: "smooth"});
           }
           logger_element.innerHTML = logger_element.innerHTML + "<br/><b>Phase 2.2 Started</b>";
         } else if (data.phase == 2 && data.procedureNo == 1 && data.status == "COMPLETED") {
@@ -560,12 +573,15 @@
             add_radio_buttons_to_plot_rewrite_dashboard(data.output[0][0]);
             //rewrite_progress.innerHTML = "New Plot Generated !.....";
             //rewrite_progress.classList.remove("loader");
+            document.getElementById('rewrite_button').disabled = false;
+            document.getElementById('close_rewrite_button').disabled = false;
             $("#rewrite_section").removeClass('loader');
             rewrite_flag = false;
             $("#rewrite_section").get(0).scrollIntoView({behavior: "smooth"});
           } else {
             timeline_label[2].classList.remove("--is-inprogress");
             timeline_label[2].classList.add("--is-completed");
+            timeline_content[2].parentElement.classList.add("completed-content");
             timeline_label[2]._tippy.setContent("Completed");
             for (i = 0; i < data.output.length; ++i) {
               if (data.output[i][1] != "") {
@@ -586,17 +602,21 @@
           timeline_label[3].classList.remove("--is-pending");
           timeline_label[3].classList.add("--is-inprogress");
           timeline_label[3]._tippy.setContent("In Progress");
+          timeline_content[3].parentElement.classList.remove("completed-content");
+          timeline_content[3].innerHTML = "<div class='text-center'><img src='images/loader2.svg' height='40px'></div>";
           current_data_server = 3;
           logger_element.innerHTML = logger_element.innerHTML + "<br/><b>Phase 3 Started</b>";
         } else if (data.phase == 3 && data.status == "COMPLETED") {
           current_data_server = 0;
           timeline_label[3].classList.remove("--is-inprogress");
           timeline_label[3].classList.add("--is-completed");
+          timeline_content[3].parentElement.classList.add("completed-content");
           timeline_label[3]._tippy.setContent("Completed");
           audio_file_names = data.output;
           logger_element.innerHTML = logger_element.innerHTML + "<br/><b>Phase 3 Completed</b>";
           write_screenplay(3);
           timeline_content[3].innerHTML = script_content;
+          document.getElementById('generate_audio_button').disabled = false;
         }
 
       });

@@ -6,6 +6,11 @@
   box-sizing: border-box;
 }
 
+.completed-content{
+  background: transparent !important;
+  color: black !important;
+}
+
 .paragraph__content-container {
   max-width: 75em;
   margin: 0 auto;
@@ -99,9 +104,9 @@
   margin: 20px 0 60px 60px;
   position: relative;
   padding: 20px;
-  /*background: #00AEEF;*/
+  background: #00AEEF;/*transparent;*/
   border: 2px solid #00AEEF;
-  color: #000;
+  color: #ffffff;
   border-radius: 5px;
   line-height: 20px;
   width: auto;
