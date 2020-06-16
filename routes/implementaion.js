@@ -9,6 +9,11 @@ router.get('/', function(req, res, next) {
 
 /* GET home page. */
 router.get('/home', function(req, res, next) {
+  res.render('templated_home', {});
+});
+
+/* GET home page. */
+router.get('/oldpage', function(req, res, next) {
   res.render('home', {});
 });
 
